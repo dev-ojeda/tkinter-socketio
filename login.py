@@ -71,8 +71,6 @@ class VentanaLogin(tk.Frame):
         elif username == "usuario" and password == "1234":
             self.session.login(username)
             messagebox.showinfo("Inicio de sesión", f"Bienvenido, {username}!")
-            # self.ventana_principal.deiconify()  # Mostrar ventana principal
-            # self.ventana_login.withdraw()  # Ocultar ventana de inicio de sesión
             self.master.mostrar_ventana(self.master.ventana_principal)
         else:
             messagebox.showerror("Error", "Nombre de usuario o contraseña incorrectos")

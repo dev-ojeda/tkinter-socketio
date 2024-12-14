@@ -8,7 +8,6 @@ from icecream import ic
 
 # Configuración del backend con Flask y Flask-SocketIO
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "secret!"
 socketio = SocketIO(app)
 
 # Diccionario para mantener los usuarios y mensajes
