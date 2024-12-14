@@ -3,14 +3,14 @@ import sqlite3
 
 
 class Database:
-    def __init__(self, db_name):
+    def __init__(self, db_name) -> None:
         """Inicializa la conexión a la base de datos"""
         self.db_name = db_name
         self.connection = None
         self.cursor = None
         self.connect()
 
-    def connect(self):
+    def connect(self) -> None:
         """Conecta a la base de datos especificada en db_name"""
         try:
             self.connection = sqlite3.connect(self.db_name)
@@ -19,7 +19,7 @@ class Database:
         except sqlite3.Error as e:
             print(f"Error al conectar a la base de datos: {e}")
 
-    def execute_query(self, query, params=()):
+    def execute_query(self, query, params=()) -> None:
         """Ejecuta una consulta de escritura en la base de datos"""
         try:
             self.cursor.execute(query, params)
@@ -31,7 +31,7 @@ class Database:
             self.cursor.close()
             self.close()
 
-    def execute_query_many(self, query, params=()):
+    def execute_query_many(self, query, params=()) -> None:
         """Ejecuta una consulta de escritura en la base de datos"""
         try:
             self.cursor.executemany(query, params)
@@ -43,7 +43,7 @@ class Database:
             self.cursor.close()
             self.close()
 
-    def fetch_query(self, query, params=()):
+    def fetch_query(self, query, params=()) -> None:
         """Ejecuta una consulta de lectura y retorna los resultados"""
         try:
             data = self.cursor.execute(query, params).fetchall()
@@ -96,7 +96,7 @@ class Database:
         finally:
             self.cursor.close()
 
-    def close(self):
+    def close(self) -> None:
         """Cierra la conexión a la base de datos"""
         if self.connection:
             self.connection.close()

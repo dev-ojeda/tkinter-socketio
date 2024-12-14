@@ -4,7 +4,7 @@ from interfaces.menu_bar import MenuBarApp
 
 
 class Application(tk.Tk):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.title("LOGIN")
         self.geometry("450x250")

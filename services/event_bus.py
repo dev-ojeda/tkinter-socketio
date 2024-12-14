@@ -62,7 +62,7 @@ class EmpleadoService:
 
 # Classe para o Consumer (Tkinter)
 class ConsumerApp(ttk.Frame):
-    def __init__(self, master):
+    def __init__(self, master) -> None:
         super().__init__(master)
         self.master = master
         # Agrupar claves por valor
@@ -212,11 +212,11 @@ class ConsumerApp(ttk.Frame):
     # self.running_cola = False
     # self.clear_area()
 
-    def clear_area(self):
+    def clear_area(self) -> None:
         self.running_cola = False
         self.text_area.delete("1.0", tk.END)
 
-    def connect_to_server(self):
+    def connect_to_server(self) -> None:
         try:
             self.sio.connect(self.BASE_URL, namespaces=["/chat"], auth=self.secreto)
             self.sio.emit(
@@ -239,10 +239,10 @@ class ConsumerApp(ttk.Frame):
         except Exception as e:
             print(f"Error al conectar: {e}")
 
-    def manipula_eventos(self):
+    def manipula_eventos(self) -> None:
         # Evento de recepción de mensajes
         @self.sio.on("send_message_client", namespace="/chat")
-        def on_message(data):
+        def on_message(data) -> None:
             ic(len(data))
             username = data.get("username")
             message = data.get("message")
@@ -256,7 +256,7 @@ class ConsumerApp(ttk.Frame):
 
         # # Evento de conexión
         @self.sio.on("connect", namespace="/chat")
-        def on_connect(auth):
+        def on_connect(auth) -> None:
             ic(auth)
             if not auth or auth.get("secret") != self.secreto["secret"]:
                 raise ConnectionRefusedError("Acceso denegado")
@@ -264,12 +264,12 @@ class ConsumerApp(ttk.Frame):
 
         # Evento de conexión
         @self.sio.on("disconnect", namespace="/chat")
-        def on_disconnect():
+        def on_disconnect() -> None:
             ic("Conectado al servidor Socket.IO desde Tkinter.")
 
         # Evento de sesión actualizada
         @self.sio.on("update_session", namespace="/chat")
-        def on_session_updated(data):
+        def on_session_updated(data) -> None:
             ic(f"Sesión actualizada: {data}")
 
     # Inicia la conexión en un hilo separado
@@ -280,7 +280,7 @@ class ConsumerApp(ttk.Frame):
             thread.daemon = True
             thread.start()
 
-    def stop_consuming(self):
+    def stop_consuming(self) -> None:
         """Detiene el consumo."""
         self.running_cola = False
 
@@ -323,7 +323,7 @@ class SocketIOApp(ttk.Frame):
         self.receive_message()
         self.running = False
 
-    def connect_to_server(self):
+    def connect_to_server(self) -> None:
         try:
             self.sio.connect("http://127.0.0.1:5000")
             self.chat_log.insert(tk.END, "SERVIDOR: Conectado al servidor SocketIO.\n")
@@ -333,7 +333,7 @@ class SocketIOApp(ttk.Frame):
             self.chat_log.insert(tk.END, f"Error al conectar: {e}\n")
             ic(f"Error al conectar: {e}")
 
-    def desconnectar(self):
+    def desconnectar(self) -> None:
         try:
             self.sio.emit(
                 "desktop_message",
@@ -345,7 +345,7 @@ class SocketIOApp(ttk.Frame):
         except Exception as e:
             ic(f"Error al conectar: {e}")
 
-    def receive_message(self):
+    def receive_message(self) -> None:
         # Evento de recepción de mensajes
         @self.sio.on("web_message")
         def on_message(data):
@@ -354,7 +354,7 @@ class SocketIOApp(ttk.Frame):
             self.chat_log.insert(tk.END, f"{username}: {message}\n")
 
     # Función para enviar mensajes al servidor
-    def send_message(self):
+    def send_message(self) -> None:
         message = self.message_entry.get()
         username = "DESKTOP"
         if message:
@@ -366,13 +366,13 @@ class SocketIOApp(ttk.Frame):
             self.message_entry.delete(0, tk.END)
 
     # Inicia la conexión en un hilo separado
-    def start_socketio(self):
+    def start_socketio(self) -> None:
         if not self.running:
             self.running = True
             thread = threading.Thread(target=self.connect_to_server)
             thread.daemon = True
             thread.start()
 
-    def stop_consuming(self):
+    def stop_consuming(self) -> None:
         """Detiene el consumo."""
         self.running = False

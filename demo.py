@@ -8,7 +8,7 @@ sio = Client()
 running_cola = False
 
 
-def manipula_eventos():
+def manipula_eventos() -> None:
     # Conectar al servidor Flask en el namespace /chat
     @sio.event
     def connect():
@@ -18,28 +18,28 @@ def manipula_eventos():
 
     # Evento de desconexión
     @sio.event
-    def disconnect():
+    def disconnect() -> None:
         ic("Desconectado del namespace")
         update_log("Desconectado del servidor")
 
     @sio.on("message_cliente", namespace="/chat")
-    def on_client_message(data):
+    def on_client_message(data) -> None:
         ic(f"Mensaje recibido del Cliente: {data}")
         update_log(f"{data["username"]}: {data["msg"]}")
 
     @sio.on("respuesta")
-    def on_respuesta(data):
+    def on_respuesta(data) -> None:
         ic(f"Respuesta del servidor: {data}")
         update_log(f"Servidor: {data}")
 
 
-def connect_to_server():
+def connect_to_server() -> None:
     # sio.connect("http://localhost:5000")
     sio.connect("http://localhost:5000", namespaces=["/chat"])
     # sio.wait()
 
 
-def send_message(namespace):
+def send_message(namespace) -> None:
     mensaje = entry_message.get()
     username = "DESKTOP"
     if mensaje:
@@ -57,16 +57,14 @@ def send_message(namespace):
         else:
             ic("error")
 
-        #
 
-
-def update_log(message):
+def update_log(message) -> None:
     text_log.insert(tk.END, message + "\n")
     text_log.see(tk.END)
 
 
 # Inicia la conexión en un hilo separado
-def start_consuming(running):
+def start_consuming(running) -> None:
     global running_cola
     if not running:
         running_cola = True
@@ -77,7 +75,7 @@ def start_consuming(running):
         stop_consuming()
 
 
-def stop_consuming():
+def stop_consuming() -> None:
     """Detiene el consumo."""
     global running_cola
     running_cola = False

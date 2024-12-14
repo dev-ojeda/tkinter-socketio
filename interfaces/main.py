@@ -19,7 +19,8 @@ class FrameSigin(ttk.Frame):
     def __init__(self, master) -> None:
         super().__init__(master)
         self.style = ttk.Style()
-        self.style.theme_use("clam")  # Cambiar el tema (clam, default, alt, etc.)
+        # Cambiar el tema (clam, default, alt, etc.)
+        self.style.theme_use("clam")
         self.style.configure("TLabel", font=("Helvetica", 12), padding=5)
         self.style.configure("TEntry", font=("Helvetica", 12), padding=5)
         self.style.configure(
@@ -30,7 +31,8 @@ class FrameSigin(ttk.Frame):
         )
         self.style.map(
             "TButton",
-            background=[("active", "lightblue")],  # Cuando el botón está activo (hover)
+            # Cuando el botón está activo (hover)
+            background=[("active", "lightblue")],
             foreground=[("active", "darkblue")],
         )  # Cambiar el
 
@@ -115,21 +117,19 @@ class FrameSigout(ttk.Frame):
 
         messagebox.showinfo("Nuevo Archivo", "Se ha creado un nuevo archivo.")
 
-    def abrir_archivo(self):
+    def abrir_archivo(self) -> None:
         messagebox.showinfo("Abrir Archivo", "Se ha abierto un archivo.")
 
-    def guardar_archivo(self):
+    def guardar_archivo(self) -> None:
         messagebox.showinfo("Guardar Archivo", "Se ha guardado el archivo.")
 
-    def salir(self):
+    def salir(self) -> None:
         self.master.quit()
         self.master.destroy()
         sys.exit()
 
-    def logout(self):
+    def logout(self) -> None:
         """Cierra sesión y regresa a la ventana de login."""
-        # self.master.title("LOGIN")
-        # self.master.geometry("400x200")
         self.master.quit()
         self.master.destroy()
         sys.exit()
@@ -229,7 +229,8 @@ class DashboardApp(ttk.Frame):
         )
         self.style_label_entry_button.map(
             "Custom.TButton",
-            background=[("active", "lightblue")],  # Cuando el botón está activo (hover)
+            # Cuando el botón está activo (hover)
+            background=[("active", "lightblue")],
             foreground=[("active", "darkblue")],
         )  # Cambiar el
         self.style_frame_datos = ttk.Style()
@@ -256,7 +257,8 @@ class DashboardApp(ttk.Frame):
             selectbackground="#87cefa",  # Color de fondo al seleccionar una opción
             selectforeground="white",  # Color del texto seleccionado
             borderwidth=4,
-            relief="raised",  # Tipo de borde (puede ser flat, solid, raised, etc.)
+            # Tipo de borde (puede ser flat, solid, raised, etc.)
+            relief="raised",
             font=("Arial", 12),  # Fuente y tamaño del texto
         )
         self.style_frame_datos.map(
@@ -269,7 +271,7 @@ class DashboardApp(ttk.Frame):
         IM_EXECUTE = os.path.join(get_assets_directory(), "execute.png")
         self.ejecutar = PhotoImage(file=IM_EXECUTE)
 
-    def crear_eventos(self):
+    def crear_eventos(self) -> None:
         # Crear el Treeview
         self.consumer = ConsumerApp(self)
 
@@ -280,7 +282,7 @@ class DashboardApp(ttk.Frame):
         label.pack(pady=20)
         self.cambiar_frame(frame)
 
-    def abrir_chat(self):
+    def abrir_chat(self) -> None:
         self.ventana_chat = SocketIOApp(self)
 
     def ingresar_empleado(self) -> None:
@@ -682,7 +684,9 @@ class DashboardApp(ttk.Frame):
             return True
         else:
             messagebox.showerror(
-                "Error de Validación", f"'{email}' no es un correo electrónico válido."
+                "Error de Validación",
+                f"'{
+                    email}' no es un correo electrónico válido.",
             )
             return False
 
