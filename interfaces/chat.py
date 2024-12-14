@@ -1,5 +1,5 @@
-from flask import Flask, request, jsonify
-from flask_socketio import SocketIO, send, emit
+from flask import Flask
+from flask_socketio import SocketIO, emit
 import threading
 import tkinter as tk
 from tkinter import scrolledtext

@@ -347,8 +347,6 @@ class DashboardApp(ttk.Frame):
         # Botones de control
         btn_agregar = ttk.Button(tab_form_datos, text="Agregar", style="Custom.TButton")
         btn_agregar.grid(row=5, column=1, pady=10, padx=10, sticky="w")
-        # self.btn_editar = tk.Button(self.frame_botones, text="Editar", command=editar_empleado)
-        # self.btn_editar.grid(row=0, column=1, padx=5)
         tab_form_datos.pack(padx=20, pady=20, expand=True, fill="both")
         notebook.add(tab_form_datos, text="Ingreso Empleados")
         self.cambiar_frame(frame)
@@ -514,13 +512,6 @@ class DashboardApp(ttk.Frame):
         )
         self.treeview.grid(row=3, column=0, padx=10, pady=10)
         self.crear_eventos()
-        # self.btn_exportar = ttk.Button(
-        #     self.frame_tree_empleados,
-        #     text="Exportar",
-        #     style="Custom.TButton",
-        #     command=self.exportar_json_empleados,
-        # )
-        # self.btn_exportar.grid(row=5, column=0, padx=5)
         self.frame_tree_empleados.pack(padx=10, pady=10, side="left", fill="both")
 
         self.btn_anterior = ttk.Button(
@@ -699,9 +690,6 @@ class DashboardApp(ttk.Frame):
         for row in data:
             # self.progressbar.step()
             self.lista.append(row)
-            # self.treeview.insert("", tk.END, values=row)
-            # self.update_idletasks()  # Refresca la ventana
-            # time.sleep(0.05)  # Pausa para simular trabajo
 
         self.total_paginas = (
             len(self.lista) + self.filas_por_pagina - 1
@@ -719,7 +707,7 @@ class DashboardApp(ttk.Frame):
         self.datos_pagina = self.lista[inicio:fin]
         # Insertar los datos de la página en el Treeview
         for fila in self.datos_pagina:
-            id = fila[0]
+            _id = fila[0]
             nombre = fila[1]
             rol = fila[2]
             email = fila[3]
@@ -731,7 +719,7 @@ class DashboardApp(ttk.Frame):
                 "",
                 "end",
                 text="",
-                values=(id, nombre, rol, email, salario, fecha_ingreso, hora_inicio),
+                values=(_id, nombre, rol, email, salario, fecha_ingreso, hora_inicio),
                 tags="unchecked",
                 image=self.treeview.im_unchecked,
             )
@@ -759,13 +747,11 @@ class DashboardApp(ttk.Frame):
         )
 
     def pagina_anterior(self) -> None:
-        # global pagina_actual
         if self.pagina_actual > 0:
             self.pagina_actual -= 1
             self.cargar_pagina()
 
     def pagina_siguiente(self) -> None:
-        # global pagina_actual
         if self.pagina_actual < self.total_paginas - 1:
             self.pagina_actual += 1
             self.cargar_pagina()
