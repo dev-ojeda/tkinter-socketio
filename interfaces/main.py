@@ -43,14 +43,12 @@ class FrameSigin(ttk.Frame):
             row=0, column=0, sticky="e", pady=10
         )
         self.entry_usuario = ttk.Entry(self.frame_login, width=30)
-        self.entry_usuario.insert(0, "admin")
         self.entry_usuario.grid(row=0, column=1, pady=10)
 
         ttk.Label(self.frame_login, text="Contraseña:").grid(
             row=1, column=0, sticky="e", pady=10
         )
         self.entry_contraseña = ttk.Entry(self.frame_login, show="*", width=30)
-        self.entry_contraseña.insert(0, "1234")
         self.entry_contraseña.grid(row=1, column=1, padx=5, pady=5)
 
         self.boton_login = ttk.Button(
