@@ -10,7 +10,7 @@ on:
 
 jobs:
   bandit_scan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout code
@@ -19,7 +19,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.x'
+        python-version: '3.12.*'
 
     - name: Install dependencies
       run: |
@@ -32,8 +32,7 @@ jobs:
           bandit -r . -f json > bandit_report.json || true
       env:
           REVIEWDOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
-
+          
     - name: Upload Bandit Report
       uses: actions/upload-artifact@v3
       with:
