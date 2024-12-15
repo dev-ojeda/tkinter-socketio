@@ -32,9 +32,9 @@ jobs:
           bandit -r . -f json > bandit_report.json || true
       env:
           REVIEWDOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
     - name: Upload Bandit Report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: bandit-report
         path: bandit_report.json
