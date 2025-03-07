@@ -7,7 +7,7 @@ sio = Client()
 running_cola = False
 
 
-# Conectar al servidor Flask en el namespace /chat
+# Conectar al servidor Flask en el namespace por default
 @sio.event
 def connect():
     ic("Conectado al servidor")

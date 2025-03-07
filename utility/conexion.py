@@ -5,7 +5,7 @@ import sqlite3
 class Database:
     def __init__(self, db_name) -> None:
         """Inicializa la conexión a la base de datos"""
-        self.db_name = db_name
+        self.db_name:str = db_name
         self.connection = None
         self.cursor = None
         self.connect()

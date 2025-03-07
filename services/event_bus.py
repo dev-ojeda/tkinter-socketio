@@ -8,7 +8,7 @@ from icecream import ic
 class EventEmitter:
     def __init__(self):
         # Diccionario para almacenar eventos y sus manejadores
-        self._event_handlers = {}
+        self._event_handlers: dict = {}
 
     def on(self, event_name, handler):
         """Registra un manejador para un evento específico."""
@@ -293,6 +293,9 @@ class SocketIOApp(ttk.Frame):
         self.master = master
         self.sio = socketio.Client()
         self.add_chat = tk.Toplevel(self.master.menu_frame)
+        self.add_chat.protocol(
+            "WM_DELETE_WINDOW", lambda: (self.sio.disconnect(), self.add_chat.destroy())
+        )
         self.add_chat.title("Chat")
         self.add_chat.geometry("500x500")
         self.frame_chat = ttk.Frame(self.add_chat, padding="20 20", relief="groove")
@@ -304,66 +307,74 @@ class SocketIOApp(ttk.Frame):
         self.chat_log.grid(row=0, column=0, padx=5, pady=5)
         self.message_entry = tk.Entry(self.frame_send_message, width=40)
         self.message_entry.grid(row=0, column=0, pady=5, padx=5)
-
         self.send_button = tk.Button(
-            self.frame_send_message, text="Enviar", command=self.send_message
+            self.frame_send_message,
+            text="Enviar",
+            command=lambda: self.send_message(self.sio.connection_namespaces[0]),
         )
         self.send_button.grid(row=0, column=1, pady=5, padx=5)
-        self.send_conectar = tk.Button(
-            self.frame_connect, text="Conectar", command=self.start_socketio
-        )
-        self.send_conectar.grid(row=0, column=0, pady=5, padx=5)
-        self.send_desconectar = tk.Button(
-            self.frame_connect, text="Desconectar", command=self.desconnectar
-        )
-        self.send_desconectar.grid(row=0, column=1, pady=5, padx=5)
         self.frame_chat.pack(ipadx=5, ipady=5, expand=True, fill="both")
         self.frame_send_message.pack(ipadx=5, ipady=5, expand=True, fill="both")
-        self.frame_connect.pack(ipadx=5, ipady=5, expand=True, fill="both")
-        self.receive_message()
         self.running = False
+        self.start_socketio()
 
     def connect_to_server(self) -> None:
         try:
-            self.sio.connect("http://127.0.0.1:5000")
-            self.chat_log.insert(tk.END, "SERVIDOR: Conectado al servidor SocketIO.\n")
-            ic("Conectado al servidor SocketIO.")
-            self.sio.wait()
+            self.sio.connect("http://localhost:5000", namespaces=["/chat"])
+            self.username = "DESKTOP"
+            chat_mesage = {"username": self.username, "msg": "Cliente Conectado"}
+            self.sio.emit("mensaje", chat_mesage, namespace="/chat")
         except Exception as e:
-            self.chat_log.insert(tk.END, f"Error al conectar: {e}\n")
+            self.update_log(f"Error al conectar: {e}")
             ic(f"Error al conectar: {e}")
 
-    def desconnectar(self) -> None:
-        try:
-            self.sio.emit(
-                "desktop_message",
-                {"username": "DESKTOP", "message": "Desconectado del servidor"},
-            )
-            self.sio.disconnect()
-            self.running = True
-            self.chat_log.insert(tk.END, "Desconectado del servidor")
-        except Exception as e:
-            ic(f"Error al conectar: {e}")
+        # Conectar al servidor Flask en el namespace por default
+        @self.sio.event
+        def connect():
+            ic("Conectado al servidor")
+            self.update_log("Conectado al servidor")
 
-    def receive_message(self) -> None:
-        # Evento de recepción de mensajes
-        @self.sio.on("web_message")
-        def on_message(data):
-            message = data.get("message")
+        # Evento de desconexión
+        @self.sio.event
+        def disconnect() -> None:
+            ic("Desconectado del namespace")
+            self.update_log("Desconectado del servidor")
+
+        @self.sio.on("message_cliente", namespace="/chat")
+        def on_client_message(data) -> None:
+            ic(f"Mensaje recibido del Cliente: {data}")
+            self.update_log(f"{data["username"]}: {data["msg"]}")
+
+        @self.sio.on("respuesta", namespace="/chat")
+        def on_respuesta(data) -> None:
             username = data.get("username")
-            self.chat_log.insert(tk.END, f"{username}: {message}\n")
+            mensaje = data.get("msg")
+            ic(f"Respuesta del servidor: {username} : {mensaje}")
+            message = username + " : " + mensaje
+            self.update_log(message)
 
-    # Función para enviar mensajes al servidor
-    def send_message(self) -> None:
+    def update_log(self, message) -> None:
+        self.chat_log.insert(tk.END, message + "\n")
+        self.chat_log.see(tk.END)
+
+    def send_message(self, namespace) -> None:
         message = self.message_entry.get()
         username = "DESKTOP"
         if message:
-            self.sio.emit(
-                "desktop_message",
-                {"username": username, "message": message},
-            )
-            self.chat_log.insert(tk.END, f"DESKTOP: {message}\n")
-            self.message_entry.delete(0, tk.END)
+            ic(namespace)
+            chat_mesage = {"username": username, "msg": message}
+            if namespace == "/":
+                self.sio.emit("mi_evento", chat_mesage)
+                self.update_log(f"DESKTOP: {message}")
+                self.message_entry.delete(0, tk.END)
+            elif namespace == "/chat":
+                self.sio.emit("mensaje", chat_mesage, namespace="/chat")
+                self.message_entry.delete(0, tk.END)
+            else:
+                ic("error")
+
+    def desconnectar(self) -> None:
+        self.running = True
 
     # Inicia la conexión en un hilo separado
     def start_socketio(self) -> None:
@@ -372,7 +383,3 @@ class SocketIOApp(ttk.Frame):
             thread = threading.Thread(target=self.connect_to_server)
             thread.daemon = True
             thread.start()
-
-    def stop_consuming(self) -> None:
-        """Detiene el consumo."""
-        self.running = False

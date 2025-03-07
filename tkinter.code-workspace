@@ -1,0 +1,57 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"pythonIndent.useTabOnHangingIndent": false,
+		"python.languageServer": "Default",
+		"python.defaultInterpreterPath": "/home/neo1sre/desarrollo/tkinter/.venv/bin/python",
+		"python.envFile": "${workspaceFolder}/.venv",
+		"[python]": {
+			"editor.defaultFormatter": "ms-python.autopep8",
+			"editor.tabCompletion": "onlySnippets",
+			"editor.snippets.codeActions.enabled": true,
+			"editor.snippetSuggestions": "inline",
+			"editor.formatOnSave": true
+		},
+		"indentRainbow.includedLanguages": [],
+		"indentRainbow.colorOnWhiteSpaceOnly": false,
+		"editor.fontSize": 20,
+		"sqltools.useNodeRuntime": false,
+		"sqltools.connections": [],
+		"remote.autoForwardPortsSource": "hybrid",
+		"remote.autoForwardPorts": false,
+		"remote.portsAttributes": {
+			"443": {
+				"protocol": "https"
+			},
+			"3000": {
+				"label": "Application"
+			},
+			"8443": {
+				"protocol": "https"
+			},
+			"40000-55000": {
+				"onAutoForward": "ignore"
+			},
+			".+\\/server.js": {
+				"onAutoForward": "openPreview"
+			}
+		},
+		"[yaml]": {
+			"editor.insertSpaces": true,
+			"editor.tabSize": 2,
+			"editor.autoIndent": "keep",
+			"diffEditor.ignoreTrimWhitespace": false,
+			"editor.defaultFormatter": "kennylong.kubernetes-yaml-formatter",
+			"editor.formatOnSave": true,
+			"editor.quickSuggestions": {
+				"other": true,
+				"comments": false,
+				"strings": true
+			}
+		},
+	}
+}

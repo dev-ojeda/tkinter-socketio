@@ -121,7 +121,7 @@ dmypy.json
 
 # IDEs project files
 .idea
-.vscode
+.vscode/
 rest-client.env.json
 
 # Folder view configuration files
