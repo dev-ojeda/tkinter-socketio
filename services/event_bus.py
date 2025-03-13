@@ -70,7 +70,7 @@ class ConsumerApp(ttk.Frame):
         # Estado del hilo de consumo
         self.running_cola = False
         self.secreto = {
-            "secret": "f9b949af179c2843e5dc08664d598dc98c76c18ef8c55b2be1469156349bdc95"
+            "secret": ""
         }
         self.sio = socketio.Client(reconnection=True)
         # URL
@@ -218,14 +218,16 @@ class ConsumerApp(ttk.Frame):
 
     def connect_to_server(self) -> None:
         try:
-            self.sio.connect(self.BASE_URL, namespaces=["/chat"], auth=self.secreto)
+            self.sio.connect(self.BASE_URL, namespaces=[
+                             "/chat"], auth=self.secreto)
             self.sio.emit(
                 "send_queue_client",
                 {"username": "DESKTOP", "message": "Datos de inicio servidor"},
                 namespace="/chat",
             )
             self.sio.wait()
-            self.text_area.insert(tk.END, "SERVIDOR: Conectado al servidor SocketIO.\n")
+            self.text_area.insert(
+                tk.END, "SERVIDOR: Conectado al servidor SocketIO.\n")
             ic("Conectado al servidor SocketIO.")
         except Exception as e:
             self.text_area.insert(tk.END, f"Error al conectar: {e}\n")
@@ -294,27 +296,33 @@ class SocketIOApp(ttk.Frame):
         self.sio = socketio.Client()
         self.add_chat = tk.Toplevel(self.master.menu_frame)
         self.add_chat.protocol(
-            "WM_DELETE_WINDOW", lambda: (self.sio.disconnect(), self.add_chat.destroy())
+            "WM_DELETE_WINDOW", lambda: (
+                self.sio.disconnect(), self.add_chat.destroy())
         )
         self.add_chat.title("Chat")
         self.add_chat.geometry("500x500")
-        self.frame_chat = ttk.Frame(self.add_chat, padding="20 20", relief="groove")
+        self.frame_chat = ttk.Frame(
+            self.add_chat, padding="20 20", relief="groove")
         self.frame_send_message = ttk.Frame(
             self.add_chat, padding="20 20", relief="groove"
         )
-        self.frame_connect = ttk.Frame(self.add_chat, padding="20 20", relief="groove")
-        self.chat_log = tk.Text(self.frame_chat, state="normal", height=15, width=50)
+        self.frame_connect = ttk.Frame(
+            self.add_chat, padding="20 20", relief="groove")
+        self.chat_log = tk.Text(
+            self.frame_chat, state="normal", height=15, width=50)
         self.chat_log.grid(row=0, column=0, padx=5, pady=5)
         self.message_entry = tk.Entry(self.frame_send_message, width=40)
         self.message_entry.grid(row=0, column=0, pady=5, padx=5)
         self.send_button = tk.Button(
             self.frame_send_message,
             text="Enviar",
-            command=lambda: self.send_message(self.sio.connection_namespaces[0]),
+            command=lambda: self.send_message(
+                self.sio.connection_namespaces[0]),
         )
         self.send_button.grid(row=0, column=1, pady=5, padx=5)
         self.frame_chat.pack(ipadx=5, ipady=5, expand=True, fill="both")
-        self.frame_send_message.pack(ipadx=5, ipady=5, expand=True, fill="both")
+        self.frame_send_message.pack(
+            ipadx=5, ipady=5, expand=True, fill="both")
         self.running = False
         self.start_socketio()
 
@@ -322,7 +330,8 @@ class SocketIOApp(ttk.Frame):
         try:
             self.sio.connect("http://localhost:5000", namespaces=["/chat"])
             self.username = "DESKTOP"
-            chat_mesage = {"username": self.username, "msg": "Cliente Conectado"}
+            chat_mesage = {"username": self.username,
+                           "msg": "Cliente Conectado"}
             self.sio.emit("mensaje", chat_mesage, namespace="/chat")
         except Exception as e:
             self.update_log(f"Error al conectar: {e}")
